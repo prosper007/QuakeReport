@@ -102,7 +102,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
             // Split the string into different parts (as an array of Strings)
             // based on the " of " text. We expect an array of 2 Strings, where
             // the first String will be "5km N" and the second String will be "Cairo, Egypt".
-            String[] parts = originalLocation.split(LOCATION_SEPARATOR);
+            String[] parts = originalLocation.split(LOCATION_SEPARATOR, 2);
             // Location offset should be "5km N " + " of " --> "5km N of"
             locationOffset = parts[0] + LOCATION_SEPARATOR;
             // Primary location should be "Cairo, Egypt"
