@@ -41,7 +41,7 @@ public class EarthquakeActivity extends AppCompatActivity {
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
 
         // Create a new adapter that takes the list of earthquakes as input
-        EarthquakeAdapter adapter = new EarthquakeAdapter(this, earthquakes);
+        final EarthquakeAdapter adapter = new EarthquakeAdapter(this, earthquakes);
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
@@ -50,7 +50,7 @@ public class EarthquakeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent web = new Intent(Intent.ACTION_VIEW);
-                String  url = earthquakes.get(i).getmUrl();
+                String  url = adapter.getItem(i).getmUrl();
                 web.setData(Uri.parse(url));
                 startActivity(web);
 
