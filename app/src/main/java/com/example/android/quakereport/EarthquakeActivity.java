@@ -26,13 +26,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EarthquakeActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
-
     private static final String USGS_REQUES_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
+    private EarthquakeAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +41,10 @@ public class EarthquakeActivity extends AppCompatActivity {
         setContentView(R.layout.earthquake_activity);
         EarthquakesTask earthquakesTask = new EarthquakesTask();
         earthquakesTask.execute(USGS_REQUES_URL);
-
-
-    }
-
-    private void updateUI (List<Earthquake> earthquakes){
-
         // Find a reference to the {@link ListView} in the layout
         ListView mEarthquakeListView = (ListView) findViewById(R.id.list);
         // Create a new adapter that takes the list of earthquakes as input
-        final EarthquakeAdapter mAdapter = new EarthquakeAdapter(getApplicationContext(), earthquakes);
+        mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         mEarthquakeListView.setAdapter(mAdapter);
@@ -67,7 +62,9 @@ public class EarthquakeActivity extends AppCompatActivity {
             }
         });
 
+
     }
+
 
     private class EarthquakesTask extends AsyncTask<String, Void, List<Earthquake>> {
         @Override
@@ -82,10 +79,10 @@ public class EarthquakeActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Earthquake> earthquakes) {
-            if (earthquakes == null) {
-                return;
+            mAdapter.clear();
+            if(earthquakes != null && !earthquakes.isEmpty()){
+                mAdapter.addAll(earthquakes);
             }
-            updateUI(earthquakes);
         }
     }
 }
