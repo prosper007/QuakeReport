@@ -5,12 +5,17 @@ import android.content.Context;
 
 import java.util.List;
 
-public class EarthquakeLoader extends android.support.v4.content.AsyncTaskLoader{
+public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>>{
     private String[] mURLs;
 
     public EarthquakeLoader(Context context, String... urls){
         super(context);
         mURLs = urls;
+    }
+
+    @Override
+    protected void onStartLoading() {
+        forceLoad();
     }
 
     @Override
