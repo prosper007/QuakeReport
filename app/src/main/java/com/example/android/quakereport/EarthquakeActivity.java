@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -39,6 +40,8 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
     private static final int EARTHQUAKE_LOADER_ID = 0;
     // Find a reference to the {@link ListView} in the layout
     ListView mEarthquakeListView;
+    ProgressBar mProgressBar;
+    TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,10 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         mEarthquakeListView.setAdapter(mAdapter);
+
+        mEmptyView = (TextView) findViewById(R.id.empty);
+        mEarthquakeListView.setEmptyView(mEmptyView);
+
         getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID, null, this);
 
         //Set on Click Listener
@@ -79,13 +86,15 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
+        mProgressBar = (ProgressBar) findViewById(R.id.progress);
+        mProgressBar.setVisibility(View.GONE);
         mAdapter.clear();
         if(earthquakes != null && !earthquakes.isEmpty()){
             mAdapter.addAll(earthquakes);
         }
+        mEmptyView.setText(R.string.no_earthquakes_found);
 
-        TextView emptyView = (TextView) findViewById(R.id.empty);
-        mEarthquakeListView.setEmptyView(emptyView);
+
     }
 
 
