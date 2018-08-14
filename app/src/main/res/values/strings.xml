@@ -23,4 +23,29 @@
 
     <string name="no_earthquakes_found">No earthquakes found.</string>
     <string name="no_internet">No internet connection</string>
+    <!-- Settings Menu Item [CHAR LIMIT=NONE] -->
+    <string name="settings_menu_item">Settings</string>
+    <!-- Settings Activity Title [CHAR LIMIT=NONE] -->
+    <string name="settings_title">Earthquake Settings</string>
+    <!-- Strings For Minimum Magnitude Preference [CHAR LIMIT=30] -->
+    <string name="settings_min_magnitude_label">Minimum Magnitude</string>
+    <string name="settings_min_magnitude_key" translatable="false">min_magnitude</string>
+    <string name="settings_min_magnitude_default" translatable="false">6.0</string>
+
+    <!-- Strings For Limit Preference [CHAR LIMIT=30] -->
+    <string name="settings_limit_label">Result Limit</string>
+    <string name="settings_limit_key" translatable="false">limit</string>
+    <string name="settings_limit_default" translatable="false">10.0</string>
+
+    <!-- Strings For Maximum Magnitude Preference [CHAR LIMIT=30] -->
+    <string name="settings_max_magnitude_label">Maximum Magnitude</string>
+    <string name="settings_max_magnitude_key" translatable="false">max_magnitude</string>
+    <string name="settings_max_magnitude_default" translatable="false">10</string>
+
+    <!-- Strings For Order By Preference [CHAR LIMIT=30] -->
+    <string name="settings_orderby_label">Result Order</string>
+    <string name="settings_orderby_key">orderby</string>
+    <string name="settings_orderby_default">time</string>
+
+
 </resources>

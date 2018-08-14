@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="zeroToTen_labels">
+        <item></item>
+        <item>0.0</item>
+        <item>1.0</item>
+        <item>2.0</item>
+        <item>3.0</item>
+        <item>4.0</item>
+        <item>5.0</item>
+        <item>6.0</item>
+        <item>7.0</item>
+        <item>8.0</item>
+        <item>9.0</item>
+        <item>10.0</item>
+    </string-array>
+
+    <string-array name="zeroToTen_values">
+        <item>No Preference</item>
+        <item>0.0</item>
+        <item>1.0</item>
+        <item>2.0</item>
+        <item>3.0</item>
+        <item>4.0</item>
+        <item>5.0</item>
+        <item>6.0</item>
+        <item>7.0</item>
+        <item>8.0</item>
+        <item>9.0</item>
+        <item>10.0</item>
+    </string-array>
+
+
+    <string-array name="orderby">
+        <item>time</item>
+        <item>time-asc</item>
+        <item>magnitude</item>
+        <item>magnitude-asc</item>
+    </string-array>
+
+    <string-array name="orderby_label">
+        <item>Most recent first</item>
+        <item>Oldest first</item>
+        <item>Strongest first</item>
+        <item>Weakest first</item>
+    </string-array>
+</resources>
