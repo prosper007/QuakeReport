@@ -16,8 +16,10 @@
 package com.example.android.quakereport;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.SharedPreferences;
@@ -52,12 +54,19 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
     TextView mEmptyView;
     TextView mNoConnection;
     SwipeRefreshLayout mSwipeRefreshLayout;
+    NetworkReceiver mReceiver = new NetworkReceiver();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
+
+        //Register BroadCast Receiver
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        mReceiver = new NetworkReceiver();
+        registerReceiver(mReceiver, intentFilter);
+
         mEarthquakeListView = (ListView) findViewById(R.id.list);
 
 
@@ -99,7 +108,12 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
                                                  }
         );
 
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 
     private void loadLoader() {
@@ -112,14 +126,10 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         mNoConnection = (TextView) findViewById(R.id.no_network);
 
         if (isConnected) {
-            if(mNoConnection.getVisibility() != View.GONE ) {
-                mNoConnection.setVisibility(View.GONE);
-            }
+            mNoConnection.setVisibility(View.GONE);
             getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID, null, this);
         } else {
-            if(mNoConnection.getVisibility() == View.GONE){
-                mNoConnection.setVisibility(View.VISIBLE);
-            }
+            mNoConnection.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
             mEarthquakeListView.setVisibility(View.GONE);
             mNoConnection.setText(R.string.no_internet);
@@ -192,5 +202,12 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+    public class NetworkReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadLoader();
+        }
     }
 }
