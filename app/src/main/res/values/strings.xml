@@ -47,5 +47,7 @@
     <string name="settings_orderby_key">orderby</string>
     <string name="settings_orderby_default">time</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="lost_connection">You\'ve lost internet connection :(</string>
+    <string name="retry">Retry</string>
 
 </resources>

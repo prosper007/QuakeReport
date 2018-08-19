@@ -28,6 +28,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -54,7 +55,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
     TextView mEmptyView;
     TextView mNoConnection;
     SwipeRefreshLayout mSwipeRefreshLayout;
+    boolean isConnected;
     NetworkReceiver mReceiver = new NetworkReceiver();
+    Snackbar mNoConnectionSnackBar;
 
 
     @Override
@@ -62,10 +65,20 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
+
         //Register BroadCast Receiver
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         mReceiver = new NetworkReceiver();
         registerReceiver(mReceiver, intentFilter);
+
+        mNoConnectionSnackBar = Snackbar.make(findViewById(R.id.coordinator_layout),
+                R.string.lost_connection, Snackbar.LENGTH_INDEFINITE);
+        mNoConnectionSnackBar.setAction(R.string.retry, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadLoader();
+            }
+        });
 
         mEarthquakeListView = (ListView) findViewById(R.id.list);
 
@@ -121,18 +134,33 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
+        isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
         mNoConnection = (TextView) findViewById(R.id.no_network);
+
 
         if (isConnected) {
             mNoConnection.setVisibility(View.GONE);
+            mNoConnectionSnackBar.dismiss();
             getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID, null, this);
         } else {
-            mNoConnection.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-            mEarthquakeListView.setVisibility(View.GONE);
-            mNoConnection.setText(R.string.no_internet);
+            if (mEarthquakeListView.getVisibility() != View.VISIBLE) {
+                mProgressBar.setVisibility(View.GONE);
+                mNoConnection.setText(R.string.no_internet);
+                mNoConnection.setVisibility(View.VISIBLE);
+                mNoConnectionSnackBar.dismiss();
+            } else {
+                mNoConnectionSnackBar = Snackbar.make(findViewById(R.id.coordinator_layout),
+                        R.string.lost_connection, Snackbar.LENGTH_INDEFINITE);
+                mNoConnectionSnackBar.setAction(R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        loadLoader();
+                    }
+                });
+                mNoConnectionSnackBar.show();
+            }
+
         }
     }
 
@@ -166,8 +194,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         if (earthquakes != null && !earthquakes.isEmpty()) {
             mAdapter.addAll(earthquakes);
         }
-        mEmptyView.setText(R.string.no_earthquakes_found);
-
+        if (isConnected) {
+            mEmptyView.setText(R.string.no_earthquakes_found);
+        }
 
     }
 
