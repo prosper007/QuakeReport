@@ -26,6 +26,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,6 +50,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
     ListView mEarthquakeListView;
     ProgressBar mProgressBar;
     TextView mEmptyView;
+    TextView mNoConnection;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,22 +72,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
         mEarthquakeListView.setEmptyView(mEmptyView);
 
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        loadLoader();
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-
-        if (isConnected) {
-            getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID, null, this);
-        } else {
-            mProgressBar.setVisibility(View.GONE);
-            TextView noNetwork = (TextView) findViewById(R.id.no_network);
-            noNetwork.setText(R.string.no_internet);
-        }
-
-        //Set on Click Listener
+        //Set onClick Listener
         mEarthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -96,7 +87,43 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
             }
         });
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
+        //Set onRefresh Listener
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                                                     @Override
+                                                     public void onRefresh() {
+                                                         loadLoader();
+                                                         mSwipeRefreshLayout.setRefreshing(false);
+                                                     }
+                                                 }
+        );
+
+
+    }
+
+    private void loadLoader() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        mNoConnection = (TextView) findViewById(R.id.no_network);
+
+        if (isConnected) {
+            if(mNoConnection.getVisibility() != View.GONE ) {
+                mNoConnection.setVisibility(View.GONE);
+            }
+            getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID, null, this);
+        } else {
+            if(mNoConnection.getVisibility() == View.GONE){
+                mNoConnection.setVisibility(View.VISIBLE);
+            }
+            mProgressBar.setVisibility(View.GONE);
+            mEarthquakeListView.setVisibility(View.GONE);
+            mNoConnection.setText(R.string.no_internet);
+        }
     }
 
     @Override
@@ -148,13 +175,22 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            startActivity(settingsIntent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+        switch (item.getItemId()) {
 
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
+
+            case R.id.menu_refresh:
+                mSwipeRefreshLayout.setRefreshing(true);
+                loadLoader();
+                mSwipeRefreshLayout.setRefreshing(false);
+                return true;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
 }

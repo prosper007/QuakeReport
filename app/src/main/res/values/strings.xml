@@ -46,6 +46,6 @@
     <string name="settings_orderby_label">Result Order</string>
     <string name="settings_orderby_key">orderby</string>
     <string name="settings_orderby_default">time</string>
-
+    <string name="menu_refresh">Refresh</string>
 
 </resources>
