@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.quakereport;
+package com.prosper.android.quakereport;
 
 
 import android.content.BroadcastReceiver;
@@ -31,6 +31,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +39,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,6 +183,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         uriBuilder.appendQueryParameter("minmag", minMagnitude);
         uriBuilder.appendQueryParameter("maxmagnitude", maxMagnitude);
         uriBuilder.appendQueryParameter("orderby", orderby);
+        Log.e("URL", uriBuilder.toString());
 
         return new EarthquakeLoader(this, uriBuilder.toString());
     }
@@ -197,6 +198,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         if (isConnected) {
             mEmptyView.setText(R.string.no_earthquakes_found);
         }
+
 
     }
 

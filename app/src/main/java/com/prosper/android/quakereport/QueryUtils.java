@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.quakereport;
+package com.prosper.android.quakereport;
 
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.prosper.android.quakereport.Earthquake;
 
 import org.json.JSONArray;
 import org.json.JSONException;

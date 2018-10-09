@@ -1,4 +1,4 @@
-package com.example.android.quakereport;
+package com.prosper.android.quakereport;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
